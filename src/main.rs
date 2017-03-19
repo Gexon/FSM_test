@@ -60,3 +60,15 @@ fn main() {
     let in_waiting = BottleFillingMachine::<Waiting>::new(0);
     let _in_filling = BottleFillingMachine::<Filling>::from(in_waiting);
 }
+
+// тесты:
+// http://rurust.github.io/rust_book_ru/src/testing.html
+pub fn add_two(a: i32) -> i32 {
+    a + 2
+}
+
+// попутно немного тесты попробую. ничего сложного)
+#[test]
+fn it_works() {
+    assert_eq!(4, add_two(2));
+}
