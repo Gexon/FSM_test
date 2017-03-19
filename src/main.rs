@@ -1,18 +1,31 @@
-struct Machine;
 
-enum BottleFillerState {
+enum State {
     Waiting { waiting_time: std::time::Duration },
     Filling { rate: usize },
     Done
 }
 
-struct BottleFiller {
-    state: BottleFillerState
+struct StateMachine { state: State }
+
+impl StateMachine {
+    fn new() -> Self {
+        StateMachine {
+            state: State::Waiting { waiting_time: std::time::Duration::new(0, 0) }
+        }
+    }
+    fn to_filling(&mut self) {
+        self.state = match self.state {
+            // Только переход "Ожидание" -> "Заполнение" возможен
+            State::Waiting { .. } => State::Filling { rate: 1 },
+            // Остальные вызовут ошибку
+            _ => panic!("Invalid state transition!")
+        }
+    }
+    // ...
 }
 
-
 fn main() {
-    // наш базовый автомат как обыкновенная структура, которую можно создать и уничтожить.
-    let machine = Machine;
-    // `machine` будет уничтожена, когда выйдет за пределы области видимости.
+    let mut state_machine = StateMachine::new();
+    state_machine.to_filling();
+
 }
