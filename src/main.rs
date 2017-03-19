@@ -48,4 +48,5 @@ impl SharedFunctionality for Filling {
 fn main() {
     let in_waiting_state = Waiting::new();
     let in_filling_state = in_waiting_state.to_filling();
+    //let in_filling_state2 = in_filling_state.to_filling(); // ошибку дает)
 }
