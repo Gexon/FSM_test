@@ -1,3 +1,8 @@
+// Общая для каждого состояния функциональность
+trait SharedFunctionality {
+    fn get_shared_value(&self) -> usize;
+}
+
 
 enum State {
     Waiting { waiting_time: std::time::Duration },
