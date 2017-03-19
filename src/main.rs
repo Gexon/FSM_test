@@ -3,34 +3,49 @@ trait SharedFunctionality {
     fn get_shared_value(&self) -> usize;
 }
 
-
-enum State {
-    Waiting { waiting_time: std::time::Duration },
-    Filling { rate: usize },
-    Done
+struct Waiting {
+    waiting_time: std::time::Duration,
+    // Данные, общие для всех состояний
+    shared_value: usize
 }
 
-struct StateMachine { state: State }
-
-impl StateMachine {
+impl Waiting {
     fn new() -> Self {
-        StateMachine {
-            state: State::Waiting { waiting_time: std::time::Duration::new(0, 0) }
+        Waiting {
+            waiting_time: std::time::Duration::new(0, 0),
+            shared_value: 0
         }
     }
-    fn to_filling(&mut self) {
-        self.state = match self.state {
-            // Только переход "Ожидание" -> "Заполнение" возможен
-            State::Waiting { .. } => State::Filling { rate: 1 },
-            // Остальные вызовут ошибку
-            _ => panic!("Invalid state transition!")
+    // Поглощаем данные!
+    fn to_filling(self) -> Filling {
+        Filling {
+            rate: 1,
+            shared_value: 0
         }
     }
-    // ...
 }
+
+impl SharedFunctionality for Waiting {
+    fn get_shared_value(&self) -> usize {
+        self.shared_value
+    }
+}
+
+
+struct Filling {
+    rate: usize,
+    // Общие для всех состояний данные
+    shared_value: usize,
+}
+
+impl SharedFunctionality for Filling {
+    fn get_shared_value(&self) -> usize {
+        self.shared_value
+    }
+}
+
 
 fn main() {
-    let mut state_machine = StateMachine::new();
-    state_machine.to_filling();
-
+    let in_waiting_state = Waiting::new();
+    let in_filling_state = in_waiting_state.to_filling();
 }
